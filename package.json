@@ -9,8 +9,8 @@
         "dev": "tsx watch src/index.ts",
         "build": "tsc",
         "docker:build": "docker build -t eso-monitor .",
-        "docker:run": "docker run -p 3000:3000 -v $(pwd)/logs:/app/logs eso-monitor",
-        "docker:run-detached": "docker run -d -p 3000:3000 -v $(pwd)/logs:/app/logs --name eso-monitor eso-monitor"
+        "docker:run": "sh -c 'docker run -p 3000:3000 --env-file .env -v $(pwd)/logs:/app/logs eso-monitor'",
+        "docker:run-detached": "sh -c 'docker run -d -p 3000:3000 -v $(pwd)/logs:/app/logs --name eso-monitor eso-monitor'"
     },
     "author": "",
     "license": "ISC",

@@ -37,12 +37,25 @@ export async function appHandler(checker: ZoneChecker, notifier: EmailService) {
 
             const messageBody = getMessageBody(content);
             const subject = `ESO monitoring - ${results.length} issues found!`;
-            const message = createHTMLMessageUsingTemplate(subject, messageBody);
+            const message = createHTMLMessageUsingTemplate(
+                subject,
+                messageBody
+            );
 
             await notifier.send(subject, message);
             saveDataToFile(data);
         } else {
-            console.log("Nurodytoje zonoje nieko nerasta.");
+            const zones = checker.getZones();
+
+            if (zones.length === 0) {
+                console.log("Nėra nurodytų zonų.");
+                return;
+            }
+            const zoneText =
+                zones.length > 1 ? "Nurodytose zonose" : "Nurodytoje zonoje";
+            const zoneList = zones.map((item) => item.name).join(', ');
+
+            console.log(`${zoneText} [${zoneList}] nieko nerasta.`);
         }
     } catch (error: any) {
         console.error("Error while handling ESO data.", error);

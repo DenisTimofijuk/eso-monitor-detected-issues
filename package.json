@@ -10,7 +10,10 @@
         "build": "tsc",
         "docker:build": "docker build -t eso-monitor .",
         "docker:run": "sh -c 'docker run -p 3000:3000 --env-file .env -v $(pwd)/logs:/app/logs eso-monitor'",
-        "docker:run-detached": "sh -c 'docker run -d -p 3000:3000 -v $(pwd)/logs:/app/logs --name eso-monitor eso-monitor'"
+        "docker:run-detached": "sh -c 'docker run -d -p 3000:3000 -v $(pwd)/logs:/app/logs --name eso-monitor eso-monitor'",
+        "docker:tag": "docker tag eso-monitor denistimofijuk/eso-monitor:latest",
+        "docker:push": "docker push denistimofijuk/eso-monitor:latest",
+        "docker:publish": "npm run docker:build && npm run docker:tag && npm run docker:push"
     },
     "author": "",
     "license": "ISC",

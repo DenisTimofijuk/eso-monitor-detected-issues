@@ -1,4 +1,4 @@
-import { config } from "./config/config";
+import { Config } from "./config/config";
 import { Mapdata } from "./types/Mapdata.type";
 import saveDataToFile from "./utils/saveDataToFile";
 import type ZoneChecker from "./ZoneChecker";
@@ -8,7 +8,7 @@ import { createHTMLMessageUsingTemplate } from "./utils/createHTMLMessageUsingTe
 export async function appHandler(checker: ZoneChecker, notifier: EmailService) {
     try {
         console.log("Fetching data...");
-        const response = await fetch(config.eso_api_url);
+        const response = await fetch(Config.eso_api_url);
         const data: Mapdata = await response.json();
 
         if (data.message) {

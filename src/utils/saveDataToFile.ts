@@ -1,21 +1,21 @@
 import fs from "fs";
 import path from "path";
 import type { Mapdata } from "../types/Mapdata.type";
-import { config } from "../config/config";
+import { Config } from "../config/config";
 
 // Ensure log directory exists
 try {
-    if (!fs.existsSync(config.logDir)) {
-        fs.mkdirSync(config.logDir, { recursive: true });
-        console.log(`Created log directory: ${config.logDir}`);
+    if (!fs.existsSync(Config.logDir)) {
+        fs.mkdirSync(Config.logDir, { recursive: true });
+        console.log(`Created log directory: ${Config.logDir}`);
     }
 } catch (error: any) {
     if (error.code === "EACCES") {
         console.error(
-            `Permission denied creating ${config.logDir}. Running as root or fix permissions.`
+            `Permission denied creating ${Config.logDir}. Running as root or fix permissions.`
         );
         // Fallback to a writable directory
-        config.logDir = "/tmp/logs";
+        Config.logDir = "/tmp/logs";
         fs.mkdirSync("/tmp/logs", { recursive: true });
         console.log("Using /tmp/logs as fallback");
     } else {
@@ -29,7 +29,7 @@ export default function saveDataToFile(data: Mapdata) {
     const logContent = JSON.stringify(data);
     const content = logTitle + logContent;
     const fileName = `eso-data-${new Date().toISOString().split("T")[0]}.txt`;
-    const logFile = path.join(config.logDir, fileName);
+    const logFile = path.join(Config.logDir, fileName);
 
     fs.writeFile(logFile, content, (err) => {
         if (err) {

@@ -46,7 +46,7 @@ const env: EnvVars = {
     INTERVAL_H: getEnvVar("INTERVAL_H", "1")
 };
 
-export const config = {
+export const Config = {
     eso_api_url: env.ESO_URL,
     zone: {
         topLeft: {

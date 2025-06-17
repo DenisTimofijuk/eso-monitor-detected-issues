@@ -1,0 +1,25 @@
+{
+  "name": "gedimai",
+  "version": "1.0.0",
+  "description": "https://www.eso.lt/web/atjungimai-planiniai-neplaniniai/mapdata?fg=1&fk=1&fn=1&fp=1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/nodemailer": "^6.4.17",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.3"
+  }
+}

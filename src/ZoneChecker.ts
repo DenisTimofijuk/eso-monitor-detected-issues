@@ -49,8 +49,8 @@ export default class ZoneChecker {
         return (
             lng >= topLeft.lng &&
             lng <= bottomRight.lng &&
-            lat >= topLeft.lat &&
-            lat <= bottomRight.lat
+            lat <= topLeft.lat &&
+            lat >= bottomRight.lat
         );
     }
 
@@ -62,7 +62,8 @@ export default class ZoneChecker {
             Math.pow(lng - center.lng, 2) + Math.pow(lat - center.lat, 2)
         );
 
-        return distance <= radius;
+        const EPSILON = 1e-9;
+        return distance <= radius + EPSILON;
     }
 
     // Check if a point is inside a polygon using ray casting algorithm

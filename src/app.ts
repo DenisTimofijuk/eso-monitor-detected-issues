@@ -54,6 +54,9 @@ export class Application {
         this.server.get('/status', (req, res) => {
             res.json(this.scheduler.getStatus());
         });
+        this.server.get('/config', (req, res) => {
+            res.json(this.config);
+        });
     }
 
     async start(): Promise<void> {
@@ -66,6 +69,7 @@ export class Application {
                 console.log('🚀 Server is up and running on port 3000');
                 console.log('Health check: http://localhost:3000/health');
                 console.log('Status check: http://localhost:3000/status');
+                console.log('Config check: http://localhost:3000/config');
             });
 
             // Start scheduler

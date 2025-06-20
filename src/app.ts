@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import ZoneChecker from "./ZoneChecker";
+import ZoneChecker from "./services/ZoneChecker";
 import EmailService from "./services/EmailService";
 import SchedulerService from "./services/SchedulerService";
 import { appHandler } from "./appHandler";

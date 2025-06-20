@@ -4,7 +4,7 @@ import type {
     ZoneCoordinates,
     ZonePolygon,
     ZoneRectangle,
-} from "./types/ZoneChecker.type";
+} from "../types/ZoneChecker.type";
 
 export default class ZoneChecker {
     zones: Zone[];

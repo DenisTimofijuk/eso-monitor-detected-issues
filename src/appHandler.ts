@@ -1,7 +1,7 @@
 import { Config } from "./config/config";
 import { Mapdata } from "./types/Mapdata.type";
 import saveDataToFile from "./utils/saveDataToFile";
-import type ZoneChecker from "./ZoneChecker";
+import type ZoneChecker from "./services/ZoneChecker";
 import type EmailService from "./services/EmailService";
 import { createHTMLMessageUsingTemplate } from "./utils/createHTMLMessageUsingTemplate";
 

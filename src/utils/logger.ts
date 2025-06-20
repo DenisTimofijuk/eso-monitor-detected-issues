@@ -7,22 +7,24 @@ type LogLevel = "error" | "warn" | "info" | "debug";
 
 let currentFileSize = 0;
 let maxFileSize = 10 * 1024 * 1024; // 10MB
-let currentLogFile: string|null = null;
-const isProduction = Config.nodeEnv === 'prod';
+let currentLogFile: string | null = null;
+const isProduction = Config.nodeEnv === "prod";
+
 // Ensure log directory exists
+const logsDir = Config.logDir;
 try {
-    if (!fs.existsSync(Config.logDir)) {
-        fs.mkdirSync(Config.logDir, { recursive: true });
-        console.log(`Created log directory: ${Config.logDir}`);
+    if (!fs.existsSync(logsDir)) {
+        fs.mkdirSync(logsDir, { recursive: true, mode: 0o755 });
+        console.log(`Created log directory: ${logsDir}`);
     }
 } catch (error: any) {
     if (error.code === "EACCES") {
         console.error(
-            `Permission denied creating ${Config.logDir}. Running as root or fix permissions.`
+            `Permission denied creating ${logsDir}. Running as root or fix permissions.`
         );
         // Fallback to a writable directory
         Config.logDir = "/tmp/logs";
-        fs.mkdirSync("/tmp/logs", { recursive: true });
+        fs.mkdirSync("/tmp/logs", { recursive: true, mode: 0o755 });
         console.log("Using /tmp/logs as fallback");
     } else {
         throw error;
@@ -35,7 +37,7 @@ export function saveDataToFile(data: Mapdata) {
     const logContent = JSON.stringify(data);
     const content = logTitle + logContent;
     const fileName = `eso-data-${new Date().toISOString().split("T")[0]}.txt`;
-    const logFile = path.join(Config.logDir, fileName);
+    const logFile = path.join(logsDir, fileName);
 
     fs.writeFile(logFile, content, (err) => {
         if (err) {
@@ -48,10 +50,8 @@ export function saveDataToFile(data: Mapdata) {
 
 export function saveLog() {
     const initCurrentLogFile = () => {
-        const fileName = `app-${
-            new Date().toISOString().split("T")[0]
-        }.log`;
-        currentLogFile = path.join(Config.logDir, fileName);
+        const fileName = `app-${new Date().toISOString().split("T")[0]}.log`;
+        currentLogFile = path.join(logsDir, fileName);
         currentFileSize = 0;
     };
 
@@ -59,14 +59,14 @@ export function saveLog() {
         const logLine = logMessage + "\n";
         const logLineSize = Buffer.byteLength(logLine, "utf8");
 
-        if(!currentLogFile){
+        if (!currentLogFile) {
             initCurrentLogFile();
         }
 
         try {
             fs.appendFileSync(currentLogFile!, logLine);
             currentFileSize += logLineSize;
-            if(!isProduction){
+            if (!isProduction) {
                 console.log(logLine);
             }
         } catch (error: any) {

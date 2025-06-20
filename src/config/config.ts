@@ -1,11 +1,8 @@
 import dotenv from "dotenv";
 import { EnvVars, NodeEnv } from "../types/Env.type";
 import { getEnvVar } from "../utils/getEnvVar";
-import { saveLog } from "../utils/logger";
 
 dotenv.config();
-
-const logger = saveLog();
 
 const requiredEnvVariables: (keyof EnvVars)[] = [
     "REC_EMAIL",
@@ -25,13 +22,13 @@ const missingVariables = requiredEnvVariables.filter(
     (variable) => !process.env[variable]
 );
 if (missingVariables.length > 0) {
-    logger.error(
+    console.error(
         "Missing environment variables:",
         missingVariables.join(", ")
     );
     process.exit(1); // Exit with non-zero code indicating failure
 } else {
-    logger.info("All environment variables are defined properly.");
+    console.info("All environment variables are defined properly.");
 }
 
 const env: EnvVars = {

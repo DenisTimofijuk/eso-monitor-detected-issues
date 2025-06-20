@@ -1,4 +1,7 @@
 import EventEmitter from "events";
+import { saveLog } from "../utils/logger";
+
+const logger = saveLog();
 
 export default class SchedulerService extends EventEmitter {
     isRunning: boolean;
@@ -33,12 +36,12 @@ export default class SchedulerService extends EventEmitter {
 
     start() {
         if (this.isRunning) {
-            console.log("Scheduler is already running");
+            logger.info("Scheduler is already running");
             return;
         }
 
         this.isRunning = true;
-        console.log(
+        logger.info(
             `Starting website monitoring every ${this.schedulerInterval} hour(s)`
         );
 
@@ -54,7 +57,7 @@ export default class SchedulerService extends EventEmitter {
         this.cycleCount++;
 
         try {
-            console.log(
+            logger.info(
                 `${startTime.toLocaleString()} - Cycle #${
                     this.cycleCount
                 }: Initiating handler...`
@@ -74,7 +77,7 @@ export default class SchedulerService extends EventEmitter {
             const duration = endTime.getTime() - startTime.getTime();
             this.lastRunTime = endTime;
 
-            console.log(
+            logger.info(
                 `${endTime.toLocaleString()} - Cycle #${
                     this.cycleCount
                 }: Handler finished in ${duration}ms. Next run in ${
@@ -102,7 +105,7 @@ export default class SchedulerService extends EventEmitter {
                 this.errors = this.errors.slice(-10);
             }
 
-            console.error(
+            logger.error(
                 `${new Date().toLocaleString()} - Cycle #${
                     this.cycleCount
                 }: Handler failed:`,
@@ -128,11 +131,11 @@ export default class SchedulerService extends EventEmitter {
 
     async stop() {
         if (!this.isRunning) {
-            console.log("Scheduler is not running");
+            logger.info("Scheduler is not running");
             return;
         }
 
-        console.log("Stopping scheduler...");
+        logger.info("Stopping scheduler...");
         this.isRunning = false;
 
         if (this.timer) {
@@ -141,7 +144,7 @@ export default class SchedulerService extends EventEmitter {
         }
 
         this.emit("stopped");
-        console.log("Scheduler stopped gracefully");
+        logger.info("Scheduler stopped gracefully");
     }
 
     getStatus() {

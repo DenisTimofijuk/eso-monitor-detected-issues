@@ -11,4 +11,7 @@ export interface EnvVars {
     BOTTOM_RIGHT_LNG: string;
     LOG_DIR: string;
     INTERVAL_H: string;
+    NODE_ENV: string;
 }
+
+export type NodeEnv = 'prod' | 'dev';

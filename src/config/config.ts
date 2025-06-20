@@ -1,8 +1,11 @@
 import dotenv from "dotenv";
-import { EnvVars } from "../types/Env.type";
+import { EnvVars, NodeEnv } from "../types/Env.type";
 import { getEnvVar } from "../utils/getEnvVar";
+import { saveLog } from "../utils/logger";
 
 dotenv.config();
+
+const logger = saveLog();
 
 const requiredEnvVariables: (keyof EnvVars)[] = [
     "REC_EMAIL",
@@ -22,13 +25,13 @@ const missingVariables = requiredEnvVariables.filter(
     (variable) => !process.env[variable]
 );
 if (missingVariables.length > 0) {
-    console.error(
+    logger.error(
         "Missing environment variables:",
         missingVariables.join(", ")
     );
     process.exit(1); // Exit with non-zero code indicating failure
 } else {
-    console.log("All environment variables are defined properly.");
+    logger.info("All environment variables are defined properly.");
 }
 
 const env: EnvVars = {
@@ -43,7 +46,8 @@ const env: EnvVars = {
     BOTTOM_RIGHT_LAT: getEnvVar("BOTTOM_RIGHT_LAT", "54.767800118842906"),
     BOTTOM_RIGHT_LNG: getEnvVar("BOTTOM_RIGHT_LNG", "25.161858516471884"),
     LOG_DIR: getEnvVar("LOG_DIR", "LOG_DIR"),
-    INTERVAL_H: getEnvVar("INTERVAL_H", "1")
+    INTERVAL_H: getEnvVar("INTERVAL_H", "1"),
+    NODE_ENV: getEnvVar("NODE_ENV", "prod")
 };
 
 export const Config = {
@@ -63,5 +67,6 @@ export const Config = {
     emailService: env.EMAIL_SERVICE,
     emailUser: env.EMAIL_AUTH_USER,
     emailPassword: env.EMAIL_AUTH_PASS,
-    intervalInHours: Number(env.INTERVAL_H)
+    intervalInHours: Number(env.INTERVAL_H),
+    nodeEnv: env.NODE_ENV as NodeEnv
 };

@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import { saveLog } from "../utils/logger";
+
+const logger = saveLog();
 
 export default class EmailService {
     transporter: nodemailer.Transporter;
@@ -34,10 +37,10 @@ export default class EmailService {
 
         try {
             const info = await this.transporter.sendMail(mailOptions);
-            console.log(`✅ Email sent successfully: ${info.messageId}`);
+            logger.info(`✅ Email sent successfully: ${info.messageId}`);
             return { success: true, messageId: info.messageId };
         } catch (error: any) {
-            console.error("❌ Failed to send email:", error.message);
+            logger.error("❌ Failed to send email:", error.message);
             return { success: false, error: error.message };
         }
     }

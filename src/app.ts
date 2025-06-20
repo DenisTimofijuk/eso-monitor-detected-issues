@@ -7,6 +7,9 @@ import { createHTMLMessageUsingTemplate } from "./utils/createHTMLMessageUsingTe
 import { Config } from "./config/config";
 import { setupEventListeners } from "./eventListeners";
 import { AREA } from "./config/area";
+import { saveLog } from "./utils/logger";
+
+const logger = saveLog();
 
 export class Application {
     private emailService: EmailService;
@@ -21,7 +24,6 @@ export class Application {
             config.emailPassword,
             config.recEmail
         );
-
         this.zoneChecker = new ZoneChecker();
         this.scheduler = new SchedulerService(config.intervalInHours);
         this.server = express();
@@ -74,34 +76,38 @@ export class Application {
 
             // Start HTTP server
             this.serverInstance = this.server.listen(3000, () => {
-                console.log("🚀 Server is up and running on port 3000");
-                console.log("Health check: http://localhost:3000/health");
-                console.log("Status check: http://localhost:3000/status");
-                console.log("Config check: http://localhost:3000/config");
+                [
+                    "🚀 Server is up and running on port 3000",
+                    "Health check: http://localhost:3000/health",
+                    "Status check: http://localhost:3000/status",
+                    "Config check: http://localhost:3000/config",
+                ].forEach((message) => {
+                    logger.info(message);
+                });
             });
 
             // Start scheduler
             await this.scheduler.start();
-            console.log("📅 Scheduler started successfully");
-        } catch (error) {
-            console.error("Failed to start application:", error);
+            logger.info("📅 Scheduler started successfully");
+        } catch (error:any) {
+            logger.error("Failed to start application:", error);
             throw error;
         }
     }
 
     async stop(): Promise<void> {
-        console.log("🛑 Stopping application...");
+        logger.info("🛑 Stopping application...");
 
         // Stop scheduler
         if (this.scheduler) {
             await this.scheduler.stop();
-            console.log("📅 Scheduler stopped");
+            logger.info("📅 Scheduler stopped");
         }
 
         // Stop HTTP server
         if (this.serverInstance) {
             this.serverInstance.close();
-            console.log("🔌 HTTP server stopped");
+            logger.info("🔌 HTTP server stopped");
         }
     }
 
@@ -115,9 +121,9 @@ export class Application {
 
         try {
             await this.emailService.send(title, message);
-            console.log("📧 Startup notification sent successfully");
-        } catch (error) {
-            console.error("Failed to send startup notification:", error);
+            logger.info("📧 Startup notification sent successfully");
+        } catch (error:any) {
+            logger.error("Failed to send startup notification:", error);
             throw new Error(
                 "Notification system is not working. Aborting startup."
             );

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import ZoneChecker from "./ZoneChecker";
-import type { ZoneCoordinates } from "./types/ZoneChecker.type";
+import type { ZoneCoordinates } from "../types/ZoneChecker.type";
 
 describe("ZoneChecker", () => {
     let zoneChecker: ZoneChecker;

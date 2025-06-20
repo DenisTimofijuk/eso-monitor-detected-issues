@@ -1,13 +1,14 @@
 import SchedulerService from "./services/SchedulerService";
+import { saveLog } from "./utils/logger";
+
+const logger = saveLog();
 
 export function setupEventListeners(scheduler: SchedulerService): void {
     scheduler.on("cycle:success", (data) => {
-        console.log(`✅ Cycle ${data.cycleNumber} completed successfully`);
-        // Add monitoring/metrics logging here
+        logger.info(`✅ Cycle ${data.cycleNumber} completed successfully`)
     });
 
     scheduler.on("cycle:error", (data) => {
-        console.error(`❌ Cycle ${data.cycleNumber} failed: ${data.error}`);
-        // Add error tracking/alerting here
+        logger.error(`❌ Cycle ${data.cycleNumber} failed: ${data.error}`)
     });
 }

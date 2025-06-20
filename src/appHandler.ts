@@ -1,22 +1,24 @@
 import { Config } from "./config/config";
 import { Mapdata } from "./types/Mapdata.type";
-import saveDataToFile from "./utils/saveDataToFile";
+import { saveDataToFile, saveLog } from "./utils/logger";
 import type ZoneChecker from "./services/ZoneChecker";
 import type EmailService from "./services/EmailService";
 import { createHTMLMessageUsingTemplate } from "./utils/createHTMLMessageUsingTemplate";
 
+const logger = saveLog();
+
 export async function appHandler(checker: ZoneChecker, notifier: EmailService) {
     try {
-        console.log("Fetching data...");
+        logger.info("Fetching data...");
         const response = await fetch(Config.eso_api_url);
         const data: Mapdata = await response.json();
 
         if (data.message) {
-            console.log("Message from ESO api:", data.message);
+            logger.info("Message from ESO api:", data.message);
         }
 
         if (!data.success) {
-            console.error("Something whent wrong while fetching data.");
+            logger.error("Something whent wrong while fetching data.");
             return;
         }
 
@@ -33,7 +35,7 @@ export async function appHandler(checker: ZoneChecker, notifier: EmailService) {
         content += "</ol>";
 
         if (results.length > 0) {
-            console.log("Found what we are looking for!");
+            logger.info("Found what we are looking for!");
 
             const messageBody = getMessageBody(content);
             const subject = `ESO monitoring - ${results.length} issues found!`;
@@ -48,17 +50,17 @@ export async function appHandler(checker: ZoneChecker, notifier: EmailService) {
             const zones = checker.getZones();
 
             if (zones.length === 0) {
-                console.log("Nėra nurodytų zonų.");
+                logger.info("Nėra nurodytų zonų.");
                 return;
             }
             const zoneText =
                 zones.length > 1 ? "Nurodytose zonose" : "Nurodytoje zonoje";
             const zoneList = zones.map((item) => item.name).join(', ');
 
-            console.log(`${zoneText} [${zoneList}] nieko nerasta.`);
+            logger.info(`${zoneText} [${zoneList}] nieko nerasta.`);
         }
     } catch (error: any) {
-        console.error("Error while handling ESO data.", error);
+        logger.error("Error while handling ESO data.", error);
     }
 }
 

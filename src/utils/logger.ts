@@ -5,8 +5,7 @@ import { Config } from "../config/config";
 
 type LogLevel = "error" | "warn" | "info" | "debug";
 
-let currentFileSize = 0;
-let maxFileSize = 10 * 1024 * 1024; // 10MB
+let currentDay = 0;
 let currentLogFile: string | null = null;
 const isProduction = Config.nodeEnv === "prod";
 
@@ -36,7 +35,7 @@ export function saveDataToFile(data: Mapdata) {
     const logTitle = `Time - ${timestamp}\n`;
     const logContent = JSON.stringify(data);
     const content = logTitle + logContent;
-    const fileName = `eso-data-${new Date().toISOString().split("T")[0]}.txt`;
+    const fileName = `eso-data-${new Date().toISOString().split("T")[0]}_${new Date().getTime()}.txt`;
     const logFile = path.join(logsDir, fileName);
 
     fs.writeFile(logFile, content, (err) => {
@@ -52,12 +51,11 @@ export function saveLog() {
     const initCurrentLogFile = () => {
         const fileName = `app-${new Date().toISOString().split("T")[0]}.log`;
         currentLogFile = path.join(logsDir, fileName);
-        currentFileSize = 0;
+        currentDay = new Date().getDay();
     };
 
     const writeToFile = (logMessage: string) => {
         const logLine = logMessage + "\n";
-        const logLineSize = Buffer.byteLength(logLine, "utf8");
 
         if (!currentLogFile) {
             initCurrentLogFile();
@@ -65,7 +63,6 @@ export function saveLog() {
 
         try {
             fs.appendFileSync(currentLogFile!, logLine);
-            currentFileSize += logLineSize;
             if (!isProduction) {
                 console.log(logLine);
             }
@@ -75,7 +72,7 @@ export function saveLog() {
             console.log(logMessage);
         }
 
-        if (currentFileSize >= maxFileSize) {
+        if (currentDay != new Date().getDay()) {
             initCurrentLogFile();
         }
     };

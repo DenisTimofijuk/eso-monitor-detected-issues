@@ -31,11 +31,9 @@ try {
 }
 
 export function saveDataToFile(data: Mapdata) {
-    const timestamp = new Date().toISOString();
-    const logTitle = `Time - ${timestamp}\n`;
-    const logContent = JSON.stringify(data);
-    const content = logTitle + logContent;
-    const fileName = `eso-data-${new Date().toISOString().split("T")[0]}_${new Date().getTime()}.txt`;
+    const timestamp = new Date();
+    const content = JSON.stringify(data);
+    const fileName = `eso-data-${timestamp.toISOString().split("T")[0]}_${timestamp.getTime()}.json`;
     const logFile = path.join(logsDir, fileName);
 
     fs.writeFile(logFile, content, (err) => {

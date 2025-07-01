@@ -4,9 +4,6 @@ import type { Mapdata } from "../types/Mapdata.type";
 import { Config } from "../config/config";
 
 type LogLevel = "error" | "warn" | "info" | "debug";
-
-let currentDay = 0;
-let currentLogFile: string | null = null;
 const isProduction = Config.nodeEnv === "prod";
 
 // Ensure log directory exists
@@ -46,32 +43,21 @@ export function saveDataToFile(data: Mapdata) {
 }
 
 export function saveLog() {
-    const initCurrentLogFile = () => {
-        const fileName = `app-${new Date().toISOString().split("T")[0]}.log`;
-        currentLogFile = path.join(logsDir, fileName);
-        currentDay = new Date().getDay();
-    };
-
     const writeToFile = (logMessage: string) => {
         const logLine = logMessage + "\n";
 
-        if (!currentLogFile) {
-            initCurrentLogFile();
-        }
+        // Generate filename on each call
+        const fileName = `app-${new Date().toISOString().split("T")[0]}.log`;
+        const logFile = path.join(logsDir, fileName);
 
         try {
-            fs.appendFileSync(currentLogFile!, logLine);
+            fs.appendFileSync(logFile, logLine);
             if (!isProduction) {
                 console.log(logLine);
             }
         } catch (error: any) {
-            // Fallback to console if file write fails
             console.error("Failed to write to log file:", error.message);
             console.log(logMessage);
-        }
-
-        if (currentDay != new Date().getDay()) {
-            initCurrentLogFile();
         }
     };
 

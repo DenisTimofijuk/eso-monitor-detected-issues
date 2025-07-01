@@ -289,3 +289,7 @@ For issues or questions:
 - Check the logs in `logs/` directory
 - Review health endpoints for status
 - Create an issue in the repository
+
+--
+*Start Docker service* 
+`sudo systemctl start docker`
